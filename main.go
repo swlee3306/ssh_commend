@@ -1,28 +1,59 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"ssh_commend/internal/sysdef"
+	"ssh_commend/internal/sysenv"
 	"ssh_commend/utils/router"
-	"sync"
+	"strconv"
 	"syscall"
+
+	"bitbucket.org/okestrolab/baton-om-sdk/btoutil"
 )
 
 var (
 	X_buildDatetime, X_buildRevision, X_buildRevisionShort, X_buildBranch, X_buildTag string
-	mutex                                                                             sync.Mutex
 )
 
 func main() {
 	fnc := "main"
-	//err := error(nil)
+	err := error(nil)
 
 	log.Printf("%s: 빌드 정보", fnc)
 	log.Printf("\t buildDatetime: %s", X_buildDatetime)
 	log.Printf("\t buildRevision: %s (%s)", X_buildRevisionShort, X_buildRevision)
 	log.Printf("\t buildBranch: %s", X_buildBranch)
 	log.Printf("\t buildTag: %s", X_buildTag)
+
+		// 초기화
+		{
+			// 시간 위치 설정
+			//btoutil.SetDefaultTimeZone("UTC")
+			btoutil.SetDefaultTimeZone("Asia/Seoul")
+	
+			// 디버그 모드 설정
+			if val, ok := os.LookupEnv("OKE_DEBUG"); ok && (len(val) > 0) {
+				sysenv.Mode.IsDebug, _ = strconv.ParseBool(val)
+			}
+	
+			// 설정 파일 이름 설정
+			if val, ok := os.LookupEnv("BATON_SETTING_FILENAME"); ok && (len(val) > 0) {
+				sysdef.ConfFilename = val
+			}
+	
+			// 설정 파일 로드
+			if err = main_LoadYml(sysdef.ConfFilename); err != nil {
+				panic(fmt.Sprintf("%s: Cfg load 실패: %s", fnc, err.Error()))
+			}
+	
+			// 데이터베이스 환경 변수 로드
+			if err = main_LoadEnvDb(); err != nil {
+				panic(fmt.Sprintf("%s: main_LoadEnvDb 실패: %s", fnc, err.Error()))
+			}
+		}
 
 	// Gin 서버를 시작합니다.
 	router.StartGinServer()

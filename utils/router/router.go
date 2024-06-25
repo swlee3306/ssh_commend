@@ -3,6 +3,7 @@ package router
 import (
 	"log"
 	"net/http"
+	"ssh_commend/internal/sysenv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,9 +18,20 @@ func StartGinServer() {
 	r.Use(gin.Recovery())
 
 	//ssh-commend 처리 api
-	commApi := r.Group("/api/v1/sshCommend")
+	commApi := r.Group("/api/v1")
 	{
-		commApi.GET("/comm", func(ctx *gin.Context) {
+		commApi.POST("/sshCommend", func(ctx *gin.Context) {
+			var err error
+			var req sysenv.CommendReq
+
+			if err = ctx.BindJSON(&req); err != nil {
+				log.Printf("%s: ctx.BindJSON faild: %s", fnc, err.Error())
+				ctx.JSON(http.StatusBadRequest, gin.H{"message": ":" + err.Error()})
+				return
+			}
+
+			sysenv.SSH_COMMEND <- req
+
 			ctx.JSON(http.StatusOK, gin.H{"message": "commend set successfully"})
 		})
 	}

@@ -1,0 +1,14 @@
+# system:
+# prvId: 9
+
+database:
+  # mssql: "sqlserver://user@SERVIDOR/SQL2012?database=dbexample&encrypt=disable&connection+timeout=30"
+  # postgresql : "host=10.10.10.135 port=5432 user=baton password=baton dbname=baton sslmode=disable"
+  # fmt.Sprintf("server=%s;port=%d;user id=%s;password=%s;database=%s", r.cfg.ip, r.cfg.port, r.cfg.authId, r.cfg.authPwd, r.cfg.name)
+  # fmt.Sprintf("server=%s;port=%d;user id=%s;password=%s;database=%s;trustservercertificate=true", r.cfg.ip, r.cfg.port, r.cfg.authId, r.cfg.authPwd, r.cfg.name)
+  #dsn: "host=10.10.10.135 port=5432 user=baton password=baton dbname=baton sslmode=disable"
+  #dsn: "host=34.22.88.101 port=5432 user=vista_mon_user password='okestro2018' dbname=vista_mon sslmode=disable"
+  #dsn: "baton:okestro2018@tcp(172.10.40.240:32006)/baton?parseTime=true"
+  #dsn: "root:cloud1234@tcp(172.16.0.140:3306)/baton?parseTime=true"
+  dsn: "root:1234@tcp(localhost:3306)/baton?parseTime=true"
+  
