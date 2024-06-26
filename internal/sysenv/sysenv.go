@@ -2,6 +2,7 @@ package sysenv
 
 var (
 	SSH_COMMEND = make(chan CommendReq)
+	SSH_COMMEND_RES = make(chan CommendRes)
 )
 
 var Mode struct {
@@ -25,6 +26,11 @@ type CommendReq struct {
 	User   string `json:"user"`
 	Pwd    string `json:"pwd"`
 	HostIp string `json:"host_ip"`
-	Port   string `json:"port"`
+	Port   uint `json:"port"`
 	Cmd    string `json:"cmd"`
+}
+
+type CommendRes struct{
+	Output string `json:"output"`
+	Err string `json:"error"`
 }

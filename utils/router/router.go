@@ -31,8 +31,9 @@ func StartGinServer() {
 			}
 
 			sysenv.SSH_COMMEND <- req
+			res := <-sysenv.SSH_COMMEND_RES
 
-			ctx.JSON(http.StatusOK, gin.H{"message": "commend set successfully"})
+			ctx.JSON(http.StatusOK, res)
 		})
 	}
 
