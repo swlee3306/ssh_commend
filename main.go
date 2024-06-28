@@ -5,18 +5,23 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"ssh_commend/collector"
+	"ssh_commend/internal/dblinker"
 	"ssh_commend/internal/ssh"
 	"ssh_commend/internal/sysdef"
 	"ssh_commend/internal/sysenv"
 	"ssh_commend/utils/router"
 	"strconv"
 	"syscall"
+	"time"
 
-	"bitbucket.org/okestrolab/baton-om-sdk/btoutil"
+	"bitbucket.org/okestrolab/baton-ao-sdk/btoutil"
+	"gorm.io/gorm"
 )
 
 var (
 	X_buildDatetime, X_buildRevision, X_buildRevisionShort, X_buildBranch, X_buildTag string
+	Db *gorm.DB
 )
 
 func main() {
@@ -56,26 +61,92 @@ func main() {
 		}
 	}
 
+	Db, err = dblinker.InitDB()
+	if err != nil {
+		log.Printf("%s DB connection Fail : %s", fnc, err)
+	}
+
+
 	go func() {
 		for {
-			req := <-sysenv.SSH_COMMEND
+			select {
+			case req := <-sysenv.SSH_COMMEND:
+				var res sysenv.CommendRes
+				output, err := ssh.ClientConnection(&req)
+				res.Output = string(output)
+				res.User = req.User
 
-			var res sysenv.CommendRes
+				if err != nil {
+					res.Err = err.Error()
+				} else {
+					res.Err = ""
+				}
+				sysenv.SSH_COMMEND_RES <- res
 
-			output, err := ssh.ClientConnection(&req)
+			case req := <-sysenv.SSH_COMMEND_ALL:
+				if req.Status {
 
-			res.Output = string(output)
-			if err != nil {
-				res.Err = err.Error()
-			} else {
-				res.Err = ""
+					vmlist, err := dblinker.Dbconnection(Db)
+					if err != nil {
+						log.Printf("%s: Dbconnection 실패: %s", fnc, err.Error())
+					}
+
+					var vmlists []*sysenv.CommendRes
+
+					for i := range vmlist {
+
+						var cmq sysenv.CommendReq
+						var res sysenv.CommendRes
+
+						cmq.HostIp = vmlist[i].Cfg.Vmattr.HostIp
+						cmq.User = vmlist[i].Cfg.Vmattr.Id
+						cmq.Pwd = vmlist[i].Cfg.Vmattr.Pwd
+						cmq.Port = vmlist[i].Cfg.Vmattr.Port
+						cmq.Cmd = req.Cmd
+
+						output, err := ssh.ClientConnection(&cmq)
+
+						res.Output = string(output)
+						res.User = cmq.User
+
+						if err != nil {
+							res.Err = err.Error()
+						} else {
+							res.Err = ""
+						}
+
+						vmlists = append(vmlists, &res)
+					}
+
+					res_e := sysenv.CommendAllRes{
+						Vm: vmlists,
+					}
+
+					sysenv.SSH_COMMEND_ALL_RES <- res_e
+				}
 			}
-
-			sysenv.SSH_COMMEND_RES <- res
 		}
 	}()
 
-	// Gin 서버를 시작합니다.
+	ticker := time.NewTicker(10 * time.Second)
+	defer ticker.Stop()
+
+	go func() {
+		for range ticker.C {
+			vmlist, err := dblinker.Dbconnection(Db)
+
+			if err != nil {
+				log.Printf("Dbconnection 실패: %s", err.Error())
+				continue
+			}
+			for i := range vmlist {
+				go func(vm *sysenv.VmEnv) {
+					collector.RunResourceSchedulers(vm)
+				}(vmlist[i])
+			}
+		}
+	}()
+
 	router.StartGinServer()
 
 	// 무한 루프

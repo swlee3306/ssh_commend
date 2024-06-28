@@ -35,6 +35,22 @@ func StartGinServer() {
 
 			ctx.JSON(http.StatusOK, res)
 		})
+		commApi.POST("/sshCommendAll", func(ctx *gin.Context) {
+			var err error
+			var req sysenv.CommendAllReq
+			if err = ctx.BindJSON(&req); err != nil {
+				log.Printf("%s: ctx.BindJSON faild: %s", fnc, err.Error())
+				ctx.JSON(http.StatusBadRequest, gin.H{"message": ":" + err.Error()})
+				return
+			}
+
+			req.Status = true
+
+			sysenv.SSH_COMMEND_ALL <- req
+			res := <-sysenv.SSH_COMMEND_ALL_RES
+
+			ctx.JSON(http.StatusOK, res)
+		})
 	}
 
 	err := r.Run(":8080")
