@@ -17,45 +17,48 @@
 - **유연성**: 사용자 정의 명령어를 통해 추가 데이터를 수집할 수 있습니다.
 
 ## 구성 파일
+```
+.
 ├── README.md
 ├── collector
-│   └── collector.go
+│   └── collector.go
+├── ft.txt
 ├── go.mod
 ├── go.sum
 ├── internal
-│   ├── dblinker
-│   │   ├── dbconnection.go
-│   │   ├── dbmd
-│   │   │   ├── BtAgent.go
-│   │   │   ├── BtCollectorAttr.go
-│   │   │   ├── BtModuleAttr.go
-│   │   │   ├── BtResource.go
-│   │   │   ├── BtResourceAttr.go
-│   │   │   ├── BtResourceStat.go
-│   │   │   ├── VwResourceDetail.go
-│   │   │   ├── bt_collector.gen.go
-│   │   │   ├── bt_collector_provider.gen.go
-│   │   │   ├── bt_collector_type.gen.go
-│   │   │   ├── bt_module.gen.go
-│   │   │   ├── bt_provider.gen.go
-│   │   │   ├── bt_provider_attr.gen.go
-│   │   │   └── bt_provider_type.gen.go
-│   │   └── load_db.go
-│   ├── lslinker
-│   │   ├── lsapi
-│   │   │   └── lsapi.go
-│   │   └── lsmd
-│   │       └── lsmd.go
-│   ├── ssh
-│   │   ├── client.go
-│   │   ├── cmdline
-│   │   │   └── cmdline.go
-│   │   └── disk
-│   │       └── disk.go
-│   ├── sysdef
-│   │   └── init.go
-│   └── sysenv
-│       └── sysenv.go
+│   ├── dblinker
+│   │   ├── dbconnection.go
+│   │   ├── dbmd
+│   │   │   ├── BtAgent.go
+│   │   │   ├── BtCollectorAttr.go
+│   │   │   ├── BtModuleAttr.go
+│   │   │   ├── BtResource.go
+│   │   │   ├── BtResourceAttr.go
+│   │   │   ├── BtResourceStat.go
+│   │   │   ├── VwResourceDetail.go
+│   │   │   ├── bt_collector.gen.go
+│   │   │   ├── bt_collector_provider.gen.go
+│   │   │   ├── bt_collector_type.gen.go
+│   │   │   ├── bt_module.gen.go
+│   │   │   ├── bt_provider.gen.go
+│   │   │   ├── bt_provider_attr.gen.go
+│   │   │   └── bt_provider_type.gen.go
+│   │   └── load_db.go
+│   ├── lslinker
+│   │   ├── lsapi
+│   │   │   └── lsapi.go
+│   │   └── lsmd
+│   │       └── lsmd.go
+│   ├── ssh
+│   │   ├── client.go
+│   │   ├── cmdline
+│   │   │   └── cmdline.go
+│   │   └── disk
+│   │       └── disk.go
+│   ├── sysdef
+│   │   └── init.go
+│   └── sysenv
+│       └── sysenv.go
 ├── main.go
 ├── main_LoadEnv.go
 ├── main_LoadYml.go
@@ -65,3 +68,4 @@
 └── utils
     └── router
         └── router.go
+```
