@@ -21,7 +21,8 @@ import (
 
 var (
 	X_buildDatetime, X_buildRevision, X_buildRevisionShort, X_buildBranch, X_buildTag string
-	Db *gorm.DB
+	Db                                                                                *gorm.DB
+	Ticker                                                                            *time.Ticker
 )
 
 func main() {
@@ -65,7 +66,6 @@ func main() {
 	if err != nil {
 		log.Printf("%s DB connection Fail : %s", fnc, err)
 	}
-
 
 	go func() {
 		for {
@@ -128,11 +128,26 @@ func main() {
 		}
 	}()
 
-	ticker := time.NewTicker(10 * time.Second)
-	defer ticker.Stop()
+	{
+		vmlist, err := dblinker.Dbconnection(Db)
+		if err != nil {
+			log.Printf("Dbconnection 초기 실패: %s", err.Error())
+			return
+		}
+		for i := range vmlist {
+			collector.RunResourceSchedulers(vmlist[i])
+		}
+	}
+
+	if sysenv.Collector.CollectTime == 0 {
+		Ticker = time.NewTicker(1 * time.Minute)
+	} else {
+		Ticker = time.NewTicker(time.Duration(sysenv.Collector.CollectTime) * time.Minute)
+	}
+	defer Ticker.Stop()
 
 	go func() {
-		for range ticker.C {
+		for range Ticker.C {
 			vmlist, err := dblinker.Dbconnection(Db)
 
 			if err != nil {

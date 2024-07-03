@@ -15,6 +15,7 @@ import (
 type conf struct {
 	System   systemConf   `yaml:"system"`
 	Database databaseConf `yaml:"database"`
+	Collector collectorConf `yaml:"collector"`
 }
 
 type systemConf struct {
@@ -23,6 +24,10 @@ type systemConf struct {
 
 type databaseConf struct {
 	Dsn string `yaml:"dsn"`
+}
+
+type collectorConf struct {
+	CollectorTime int `yaml:"collectorTime"`
 }
 
 // main_LoadYml은 지정된 파일에서 설정을 로드하는 함수입니다.
@@ -42,6 +47,7 @@ func main_LoadYml(fname string) error {
 	}
 
 	sysenv.Database.Dsn = c.Database.Dsn
+	sysenv.Collector.CollectTime = c.Collector.CollectorTime
 
 	return nil
 }

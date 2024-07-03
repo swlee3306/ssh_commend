@@ -23,5 +23,12 @@ func main_LoadEnvDb() error {
 		}
 	}
 
+	//Collector Time
+	{
+		if val, ok := os.LookupEnv("BATON_COLLECT_TIME"); ok && (len(val) > 0) {
+			sysenv.Collector.CollectTime = btoutil.ToInt(val)
+		}
+	}
+
 	return nil
 }

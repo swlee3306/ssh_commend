@@ -17,6 +17,11 @@ var Database struct {
 	MaxLifetimeHour int
 }
 
+var Collector struct {
+	CollectTime int
+}
+
+
 var ApiServer struct {
 	Tls      bool
 	Port     int
