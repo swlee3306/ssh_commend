@@ -88,3 +88,13 @@ type DiskData struct {
 type DiskDatas struct{
 	DiskData []*DiskData
 }
+
+type OsInfo struct {
+	Osname string
+	Osversion string
+	Desc string
+}
+
+type OsInfos struct{
+	OsInfo []*OsInfo
+}

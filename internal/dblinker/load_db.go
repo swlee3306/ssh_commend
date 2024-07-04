@@ -80,3 +80,16 @@ func LoadDb(db *gorm.DB, c *sysenv.VmEnv) (err error) {
 	return nil
 }
 
+func UpdateDb(db *gorm.DB, c *sysenv.VmEnv, osinfo *sysenv.OsInfo) error {
+	var vmList []*dbmd.BtResource
+
+	res := db.Raw("select * from bt_resource br where br.resource_type_id = ? and br.`uuid` = ? and (br.del_yn = 'n' or br.del_yn = 'N')", btocd.ResourceType.OsVm, c.UUID).Scan(&vmList)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	db.Clauses(clause.OnConflict{
+
+
+}
