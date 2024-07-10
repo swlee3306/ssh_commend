@@ -2,6 +2,7 @@ package collector
 
 import (
 	"log"
+	"ssh_commend/internal/dblinker"
 	"ssh_commend/internal/ssh/osinfo"
 	"ssh_commend/internal/sysenv"
 )
@@ -44,7 +45,16 @@ func MetaUpdate(vm *sysenv.VmEnv){
 		}
 		rootData.Osversion = datas[i].Osversion
 	}
+  
+	d, err := dblinker.InitDB()
+	if err != nil {
+		log.Printf("%s: InitDB failed: %s", fnc, err.Error())
+		return
+	}
 
-	
-
+	err = dblinker.UpdateDb(d, vm, rootData)
+	if err != nil {
+		log.Printf("%s: UpdateDb failed: %s", fnc, err.Error())
+		return
+	}
 }

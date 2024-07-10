@@ -157,6 +157,7 @@ func main() {
 			for i := range vmlist {
 				go func(vm *sysenv.VmEnv) {
 					collector.RunResourceSchedulers(vm)
+					collector.MetaUpdate(vm)
 				}(vmlist[i])
 			}
 		}

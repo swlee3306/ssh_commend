@@ -8,6 +8,7 @@ import (
 	"bitbucket.org/okestrolab/baton-ao-sdk/btocd"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func LoadModule(db *gorm.DB) ([]*sysenv.VmEnv, error) {
@@ -89,7 +90,16 @@ func UpdateDb(db *gorm.DB, c *sysenv.VmEnv, osinfo *sysenv.OsInfo) error {
 		return res.Error
 	}
 
+	attr := &dbmd.BtResourceAttr{
+		ResourceID: vmList[0].ID,
+		Key:"vm_os_kind",
+		Value: osinfo.Osname,
+	}
+
 	db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "ResourceID"}, {Name: "key"}},
+		DoUpdates: clause.AssignmentColumns([]string{"value"}),
+	}).Create(&attr)
 
-
+	return nil
 }
