@@ -19,55 +19,54 @@
 
 ## 구성 파일
 ```
-.
+ssh_commend/
 ├── README.md
-├── collector
-│   └── collector.go
-├── ft.txt
+├── collector/              # 데이터 수집기
+│   └── collector.go
 ├── go.mod
 ├── go.sum
-├── internal
-│   ├── dblinker
-│   │   ├── dbconnection.go
-│   │   ├── dbmd
-│   │   │   ├── BtAgent.go
-│   │   │   ├── BtCollectorAttr.go
-│   │   │   ├── BtModuleAttr.go
-│   │   │   ├── BtResource.go
-│   │   │   ├── BtResourceAttr.go
-│   │   │   ├── BtResourceStat.go
-│   │   │   ├── VwResourceDetail.go
-│   │   │   ├── bt_collector.gen.go
-│   │   │   ├── bt_collector_provider.gen.go
-│   │   │   ├── bt_collector_type.gen.go
-│   │   │   ├── bt_module.gen.go
-│   │   │   ├── bt_provider.gen.go
-│   │   │   ├── bt_provider_attr.gen.go
-│   │   │   └── bt_provider_type.gen.go
-│   │   └── load_db.go
-│   ├── lslinker
-│   │   ├── lsapi
-│   │   │   └── lsapi.go
-│   │   └── lsmd
-│   │       └── lsmd.go
-│   ├── ssh
-│   │   ├── client.go
-│   │   ├── cmdline
-│   │   │   └── cmdline.go
-│   │   └── disk
-│   │       └── disk.go
-│   ├── sysdef
-│   │   └── init.go
-│   └── sysenv
-│       └── sysenv.go
-├── main.go
-├── main_LoadEnv.go
-├── main_LoadYml.go
-├── print_sdk_version.sh
-├── push_sdk_newversion.sh
-├── setting.yml
-└── utils
-    └── router
+├── internal/              # 내부 패키지
+│   ├── dblinker/          # 데이터베이스 링커
+│   │   ├── dbconnection.go
+│   │   ├── dbmd/          # 데이터베이스 모델
+│   │   │   ├── BtAgent.go
+│   │   │   ├── BtCollectorAttr.go
+│   │   │   ├── BtModuleAttr.go
+│   │   │   ├── BtResource.go
+│   │   │   ├── BtResourceAttr.go
+│   │   │   ├── BtResourceStat.go
+│   │   │   ├── VwResourceDetail.go
+│   │   │   ├── bt_collector.gen.go
+│   │   │   ├── bt_collector_provider.gen.go
+│   │   │   ├── bt_collector_type.gen.go
+│   │   │   ├── bt_module.gen.go
+│   │   │   ├── bt_provider.gen.go
+│   │   │   ├── bt_provider_attr.gen.go
+│   │   │   └── bt_provider_type.gen.go
+│   │   └── load_db.go
+│   ├── lslinker/          # 로그 서버 링커
+│   │   ├── lsapi/
+│   │   │   └── lsapi.go
+│   │   └── lsmd/
+│   │       └── lsmd.go
+│   ├── ssh/               # SSH 클라이언트
+│   │   ├── client.go
+│   │   ├── cmdline/
+│   │   │   └── cmdline.go
+│   │   └── disk/
+│   │       └── disk.go
+│   ├── sysdef/            # 시스템 정의
+│   │   └── init.go
+│   └── sysenv/            # 시스템 환경
+│       └── sysenv.go
+├── main.go                # 메인 실행 파일
+├── main_LoadEnv.go        # 환경 변수 로드
+├── main_LoadYml.go        # YAML 설정 로드
+├── print_sdk_version.sh  # SDK 버전 출력
+├── push_sdk_newversion.sh # 새 버전 푸시
+├── setting.yml            # YAML 설정 파일
+└── utils/                 # 유틸리티
+    └── router/
         └── router.go
 ```
 
